@@ -72,12 +72,15 @@ class submitViewController: UIViewController
         super.viewDidAppear(animated)
         captureView.layer.cornerRadius = 10
         captureView.layer.masksToBounds = true
+        self.captureSession.startRunning()
     }
     override func viewWillDisappear(_ animated: Bool) {
         print(#function)
         
         super.viewWillDisappear(animated)
         self.removeObserver() // Notificationを画面が消えるときに削除
+        self.captureSession.stopRunning()
+
     }
     
     //==============================
@@ -343,11 +346,14 @@ class submitViewController: UIViewController
     func displayBookDetail() {
         self.titleTextField.text = bookTitle
         self.authorsTextField.text = bookAuthor
-        guard let URL = NSURL(string: bookImageURL) else { return }
-        let url = URL as URL
-        print(url)
-        let imageData :Data = (try! Data(contentsOf: url ,options: NSData.ReadingOptions.mappedIfSafe))
-        self.bookImageView.image = UIImage(data: imageData)
+        self.bookUrlTextField.text = bookAmazonURL
+        if bookImageURL != "" {
+            guard let URL = NSURL(string: bookImageURL) else { return }
+            let url = URL as URL
+            print(url)
+            let imageData :Data = (try! Data(contentsOf: url ,options: NSData.ReadingOptions.mappedIfSafe))
+            self.bookImageView.image = UIImage(data: imageData)
+        }
         bookUrlTextField.text = bookAmazonURL
         setResultLabel(text: "")
     }

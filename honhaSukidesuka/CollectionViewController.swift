@@ -53,20 +53,25 @@ class CollectionViewController: UICollectionViewController
     }
     */
     //=============================
+    // Gesture:セグエ
+    //=============================
+    
+    
+    //=============================
     // MARK:セグエ
     //=============================
     var selectedIndex:Int = -1
     // セグエを使って、画面遷移している時は発動
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // 次の画面のインスタンス(オブジェクト）を取得
-        let dvc:detailViewController = segue.destination as! detailViewController
-        if Constants.DEBUG == true {
-            print(#function)
+        if segue.identifier == "segueko" {
+            // 次の画面のインスタンス(オブジェクト）を取得
+            let dvc:detailViewController = segue.destination as! detailViewController
+            if Constants.DEBUG == true {
+                print(#function)
+            }
+            //次の画面のプロパティ（メンバ変数）passedIndexに選択された行番号を渡す
+            dvc.passedIndex = selectedIndex
         }
-        //次の画面のプロパティ（メンバ変数）passedIndexに選択された行番号を渡す
-        dvc.passedIndex = selectedIndex
-        print(selectedIndex)
-        
     }
     //移動した画面から戻ってきた時発動
     @IBAction func returnMenu(_ segu:UIStoryboardSegue) {
@@ -177,24 +182,24 @@ class CollectionViewController: UICollectionViewController
     }
     
     
-    let margin: CGFloat = 3.0
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.row % 3 == 0 {
-            return CGSize(width: 100.0, height: 100.0)
-        }
-        return CGSize(width: 60.0, height: 60.0)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: margin, left: margin, bottom: margin, right: margin)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return margin
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return margin
-    }
+//    let margin: CGFloat = 3.0
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        if indexPath.row % 3 == 0 {
+//            return CGSize(width: 100.0, height: 100.0)
+//        }
+//        return CGSize(width: 60.0, height: 60.0)
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//        return UIEdgeInsets(top: margin, left: margin, bottom: margin, right: margin)
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//        return margin
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+//        return margin
+//    }
 
 }
