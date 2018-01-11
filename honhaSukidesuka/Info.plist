@@ -45,6 +45,10 @@
 	<string>フォトライブラリから本の写真を登録するために使わせていただきます</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>撮った写真をフォトライブラリに保存するために使わせていただきます</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>FontAwesome.otf</string>
+	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>

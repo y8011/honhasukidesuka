@@ -16,7 +16,7 @@ class submitViewController: UIViewController
 {
     
     @IBOutlet weak var captureView: UIView!
-    @IBOutlet weak var resultTextLabel: UILabel!
+  //  @IBOutlet weak var resultTextLabel: UILabel!
     @IBOutlet weak var submitButton: UIButton!
     
     let captureSession = AVCaptureSession()
@@ -92,7 +92,8 @@ class submitViewController: UIViewController
         case 1:
             authorsTextField.becomeFirstResponder()
         case 2:
-            sender.endEditing(true)
+            //sender.endEditing(true)
+            recomendTextView.becomeFirstResponder()
             
         default:
             sender.endEditing(true)
@@ -116,7 +117,7 @@ class submitViewController: UIViewController
         if  (titleTextField.text == "" )
          || (recomendTextView.text == "")
         {
-            alertCheck(s_title: "だめ", s_message: "本のタイトルとおすすめ理由は入れてください。")
+            alertNormal(s_title: "だめ", s_message: "本のタイトルとおすすめ理由は入れてください。",s_answer: "りょ")
             return
         }
         let myCoreData:ingCoreData = ingCoreData()
@@ -196,10 +197,13 @@ class submitViewController: UIViewController
             guard let value = detectionString else { continue }
             
             
-            guard let isbn = convertISBN(value: value) else { continue }
+            guard let isbn = convertISBN(value: value) else {
+                //setResultLabel(text: "ISDNではなさそうです")
+
+                continue }
             
             text += "ISBN:\t\(isbn)"
-            setResultLabel(text: text)
+            //setResultLabel(text: text)
             
             bookAmazonURL = String(format: "http://amazon.co.jp/dp/%@", isbn)
             let URLString = String(format: "https://www.googleapis.com/books/v1/volumes?q=isbn:%@",isbn)
@@ -224,7 +228,7 @@ class submitViewController: UIViewController
                     itemNum = getJson["totalItems"] as! Int
                     if  itemNum == 0{
                         
-                        self.setResultLabel(text: "Google Bookにはありませんでした")
+                        self.setResultLabel(text: "Google Bookでは見つかりませんでした")
                     }
                     else{
                         //配列の中身を高速列挙で表示
@@ -248,8 +252,7 @@ class submitViewController: UIViewController
                                     default :
                                         break
                                     }
-                                    //                                    print("key2:\(key2)")
-                                    //                                    print("値2:\(dat2)")
+
                                     
                                 }
                                 
@@ -350,8 +353,8 @@ class submitViewController: UIViewController
     
     
     func setResultLabel (text:String) {
-        resultTextLabel?.text = text
-        
+        //resultTextLabel?.text = text
+        alertNormal(s_title: text, s_message: "", s_answer: "はい")
     }
     
     func displayBookDetail() {
@@ -366,7 +369,7 @@ class submitViewController: UIViewController
             self.bookImageView.image = UIImage(data: imageData)
         }
         bookUrlTextField.text = bookAmazonURL
-        setResultLabel(text: "")
+        //setResultLabel(text: "")
     }
     
     override func didReceiveMemoryWarning() {
@@ -506,7 +509,7 @@ class submitViewController: UIViewController
         
     }
     
-    func alertCheck(s_title:String, s_message:String){
+    func alertNormal(s_title:String, s_message:String,s_answer:String){
         
         //部品となるアラート
         let alert = UIAlertController(
@@ -518,7 +521,7 @@ class submitViewController: UIViewController
         //ボタンを増やしたいときは、addActionをもう一つ作ればよい
         alert.addAction(
             UIAlertAction(
-                title: "りょ",
+                title: s_answer,
                 style: .default,
                 handler: nil
             )

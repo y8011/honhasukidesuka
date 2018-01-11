@@ -17,6 +17,10 @@ class detailViewController: UIViewController
     
     @IBOutlet weak var submitButton: UIButton!
     @IBOutlet weak var deleteButton: UIButton!
+    @IBOutlet weak var amazonButton: UIButton!
+    var amazonLink:String = ""
+    @IBOutlet weak var twitterButton: UIButton!
+    var twitterLink:String = ""
     
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var authorsTextField: UITextField!
@@ -45,6 +49,7 @@ class detailViewController: UIViewController
         if Constants.DEBUG == true {
             print(#function)
         }
+        self.configureObserver()
 
         
  
@@ -53,6 +58,7 @@ class detailViewController: UIViewController
     //===============================
     // updateViewConstraints
     //===============================
+    var onetime:Bool = false
     override func updateViewConstraints() {
         print(#function)
         
@@ -60,26 +66,33 @@ class detailViewController: UIViewController
 
         
         super.updateViewConstraints()
-        
+        if onetime == false {
+            initDetail()
+            onetime = true
+        }
+        initLinkButton()
+
         
     }
     //===============================
     // viewDidAppear
     //===============================
-    var onetime:Bool = false
     override func viewDidAppear(_ animated: Bool) {
         print(#function)
         super.viewDidAppear(animated)
-        if onetime == false {
-            initDetail()
-            onetime = true
-        }
-
+        
     }
 
 
     
-
+    override func viewWillDisappear(_ animated: Bool) {
+        print(#function)
+        
+        super.viewWillDisappear(animated)
+        self.removeObserver() // Notificationを画面が消えるときに削除
+        
+    }
+    
     
     
     override func didReceiveMemoryWarning() {
@@ -120,6 +133,27 @@ class detailViewController: UIViewController
         
     }
     
+    func initLinkButton(){
+        let font = UIFont(name: "FontAwesome", size: 22)
+        amazonButton.titleLabel?.font = font
+        var title = "\u{f270}"
+        amazonButton.setTitle(title, for: .normal)
+        amazonButton.setTitle(title, for: .highlighted)
+        let bookTitle = titleTextField.text!
+        var urlStr = "https://www.amazon.co.jp/s/ref=nb_sb_noss_2?__mk_ja_JP=\(bookTitle)&url=search-alias%3Daps&field-keywords=\(bookTitle)&x=0&Ay=0"
+        print(urlStr)
+        amazonLink = urlStr.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
+        print(amazonLink)
+        twitterButton.titleLabel?.font = font
+        title = "\u{f081}"
+        twitterButton.setTitle(title, for: .normal)
+        twitterButton.setTitle(title, for: .highlighted)
+        urlStr = "https://twitter.com/search/\(bookTitle)"
+        print(urlStr)
+        twitterLink = urlStr.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
+        print(twitterLink)
+    }
+    
     //=====================
     // MARK:Gesture
     //=====================
@@ -131,7 +165,7 @@ class detailViewController: UIViewController
         titleTextField.isEnabled = isDuringEdit
         authorsTextField.isEnabled = isDuringEdit
         recomendTextView.isEditable = isDuringEdit
-        bookUrlTextField.isEnabled = isDuringEdit
+        //bookUrlTextField.isEnabled = isDuringEdit
         bookImageView.isUserInteractionEnabled = isDuringEdit
         
         if isDuringEdit == true {
@@ -177,8 +211,9 @@ class detailViewController: UIViewController
         case 1:
             authorsTextField.becomeFirstResponder()
         case 2:
-            sender.endEditing(true)
-            
+            //sender.endEditing(true)
+            recomendTextView.becomeFirstResponder()
+
         default:
             sender.endEditing(true)
         }
@@ -188,6 +223,41 @@ class detailViewController: UIViewController
         view.endEditing(true)
     }
     
+    @IBAction func tapURL(_ sender: UITapGestureRecognizer) {
+        if isDuringEdit == false {
+            let URLString = bookUrlTextField.text!
+            
+            print("tapURL:\(URLString)")
+            guard let URL = NSURL(string: URLString) else {return }
+            let url = URL as URL
+            print(url)
+            UIApplication.shared.open(url)
+        }
+        else {
+            bookUrlTextField.becomeFirstResponder()
+        }
+        
+    }
+    
+
+    @IBAction func tapSearchLink(_ sender: UIButton) {
+        var URLString:String = ""
+        switch sender.tag {
+        case 3:
+            // amazon
+            URLString = amazonLink
+        case 4:
+            // twitter
+            URLString = twitterLink
+        default:
+            return
+        }
+        guard let URL = NSURL(string: URLString) else {return }
+        let url = URL as URL
+        print(url)
+        UIApplication.shared.open(url)
+
+    }
     //===============================
     // MARK:カメラ
     //===============================
@@ -273,7 +343,48 @@ class detailViewController: UIViewController
         //imageViewSetting()
         
     }
+    //=================================
+    // MARK:画面ずらす処理
+    //=================================
+    // Notificationを設定
+    func configureObserver() {
+        
+        let notification = NotificationCenter.default
+        notification.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        notification.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
     
+    // Notificationを削除
+    func removeObserver() {
+        
+        let notification = NotificationCenter.default
+        notification.removeObserver(self)
+    }
+    
+    // キーボードが現れた時に、画面全体をずらす。
+    @objc func keyboardWillShow(notification: Notification?) {
+        print(#function)
+//        if moveDisplay == true {
+            let rect = (notification?.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+            let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
+            UIView.animate(withDuration: duration!, animations: { () in
+                let transform = CGAffineTransform(translationX: 0, y: -(rect?.size.height)!)
+                self.view.transform = transform
+                
+            })
+//        }
+    }
+    
+    
+    // キーボードが消えたときに、画面を戻す
+    @objc func keyboardWillHide(notification: Notification?) {
+        print(#function)
+        let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? Double
+        UIView.animate(withDuration: duration!, animations: { () in
+            
+            self.view.transform = CGAffineTransform.identity
+        })
+    }
     //=============================
     // MARK:deleteデータ
     //=============================

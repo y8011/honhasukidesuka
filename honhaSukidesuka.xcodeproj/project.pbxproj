@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		B248F8D32006EEC100B37F3D /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B248F8D22006EEC100B37F3D /* CollectionViewController.swift */; };
 		B248F8D52006F9A100B37F3D /* detailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B248F8D42006F9A100B37F3D /* detailViewController.swift */; };
+		B262ADA220077CA3005A8D86 /* FontAwesome.otf in Resources */ = {isa = PBXBuildFile; fileRef = B262ADA120077A46005A8D86 /* FontAwesome.otf */; };
 		B28613F22005A41000D11292 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28613F12005A41000D11292 /* AppDelegate.swift */; };
 		B28613F72005A41000D11292 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B28613F52005A41000D11292 /* Main.storyboard */; };
 		B28613FA2005A41000D11292 /* honhaSukidesuka.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B28613F82005A41000D11292 /* honhaSukidesuka.xcdatamodeld */; };
@@ -46,6 +47,7 @@
 /* Begin PBXFileReference section */
 		B248F8D22006EEC100B37F3D /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		B248F8D42006F9A100B37F3D /* detailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = detailViewController.swift; sourceTree = "<group>"; };
+		B262ADA120077A46005A8D86 /* FontAwesome.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.otf; sourceTree = "<group>"; };
 		B28613EE2005A41000D11292 /* honhaSukidesuka.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = honhaSukidesuka.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B28613F12005A41000D11292 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B28613F62005A41000D11292 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 		B286143420066ADF00D11292 /* source */ = {
 			isa = PBXGroup;
 			children = (
+				B262ADA120077A46005A8D86 /* FontAwesome.otf */,
 				B286143520066ADF00D11292 /* noimage.png */,
 			);
 			path = source;
@@ -270,6 +273,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B262ADA220077CA3005A8D86 /* FontAwesome.otf in Resources */,
 				B28613FF2005A41000D11292 /* LaunchScreen.storyboard in Resources */,
 				B28613FC2005A41000D11292 /* Assets.xcassets in Resources */,
 				B286143620066ADF00D11292 /* noimage.png in Resources */,
