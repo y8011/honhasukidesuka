@@ -28,14 +28,16 @@ class detailViewController: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        bookImageView.layer.borderWidth = 0.2
+        bookImageView.layer.borderWidth = 0.1
         bookImageView.layer.cornerRadius = 5
         bookImageView.layer.masksToBounds = true
-        recomendTextView.layer.borderWidth = 0.2
+        recomendTextView.layer.borderWidth = 0.1
         recomendTextView.layer.cornerRadius = 5
         submitButton.layer.cornerRadius = 5
         submitButton.layer.masksToBounds = true
-        
+        deleteButton.layer.cornerRadius = 5
+        deleteButton.layer.masksToBounds = true
+
         
     }
 
@@ -122,6 +124,7 @@ class detailViewController: UIViewController
     // MARK:Gesture
     //=====================
     var isDuringEdit:Bool = false
+    //　編集ボタンを押した時
     @IBAction func tapEditButton(_ sender: UIButton) {
         isDuringEdit = !(isDuringEdit)
         
@@ -156,12 +159,14 @@ class detailViewController: UIViewController
         
     }
     
+    // 削除ボタン押した時
     @IBAction func tapDelete(_ sender: UIButton) {
         alertDelete(s_title: "削除します", s_message: "本当に削除しますか？")
         
     }
     
     
+    // 本のイメージを押した時
     @IBAction func tapImage(_ sender: UITapGestureRecognizer) {
         alertAction2(s_title: "本の写真を選択して下さい", s_message: "")
     }

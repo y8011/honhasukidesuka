@@ -40,9 +40,9 @@ class submitViewController: UIViewController
         print(#function)
         super.viewDidLoad()
         
-        bookImageView.layer.borderWidth = 0.2
+        bookImageView.layer.borderWidth = 0.1
         bookImageView.layer.cornerRadius = 5
-        recomendTextView.layer.borderWidth = 0.2
+        recomendTextView.layer.borderWidth = 0.1
         recomendTextView.layer.cornerRadius = 5
         submitButton.layer.cornerRadius = 5
         submitButton.layer.masksToBounds = true
@@ -70,7 +70,7 @@ class submitViewController: UIViewController
     override func viewDidAppear(_ animated: Bool) {
         print(#function)
         super.viewDidAppear(animated)
-        captureView.layer.cornerRadius = 10
+        captureView.layer.cornerRadius = 5
         captureView.layer.masksToBounds = true
         self.captureSession.startRunning()
     }
@@ -101,23 +101,34 @@ class submitViewController: UIViewController
     
     //おすすめ理由以外は、画面をずらさないようにするためのフラグ
     @IBAction func touchDown(_ sender: UITextField) {
-        moveDisplay = false
+       // moveDisplay = false　位置を変えたのでいつも必要になった
         
     }
     
     // 他のビューを触ったら、キーボードが閉じる
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
-        moveDisplay = true
+       // moveDisplay = true
     }
     
+    // 登録ボタンを押した時
     @IBAction func tapSubmitButton(_ sender: Any) {
+        if  (titleTextField.text == "" )
+         || (recomendTextView.text == "")
+        {
+            alertCheck(s_title: "だめ", s_message: "本のタイトルとおすすめ理由は入れてください。")
+            return
+        }
         let myCoreData:ingCoreData = ingCoreData()
         let myLocalImage:ingLocalImage = ingLocalImage()
         let newrid = myCoreData.insertRecommend(title: titleTextField.text!, author: authorsTextField.text!, recommendation: recomendTextView.text!,link: bookAmazonURL)
         myLocalImage.storeJpgImageInDocument(image: bookImageView.image!, name: "image\(newrid).jpg")
+        
+        //戻る
+        self.navigationController?.popViewController(animated: true)
     }
     
+    // イメージをタップした時
     @IBAction func tapBookImage(_ sender: UITapGestureRecognizer) {
         
         alertAction2(s_title: "本の写真を選択して下さい", s_message: "")
@@ -494,6 +505,33 @@ class submitViewController: UIViewController
         
         
     }
+    
+    func alertCheck(s_title:String, s_message:String){
+        
+        //部品となるアラート
+        let alert = UIAlertController(
+            title: s_title ,
+            message: s_message,
+            preferredStyle: .alert
+        )
+        
+        //ボタンを増やしたいときは、addActionをもう一つ作ればよい
+        alert.addAction(
+            UIAlertAction(
+                title: "りょ",
+                style: .default,
+                handler: nil
+            )
+        )
+        
+ 
+        // アラート表示
+        present(alert, animated: true, completion: nil)
+        
+        
+    }
+    
+
     
 }
 
