@@ -245,6 +245,11 @@ class CollectionViewController: UICollectionViewController
         
        // let myCoreData = ingCoreData()
        // return myCoreData.bookCount
+        if collections.count == 0 { //0のときはこれをクリアできないのでここで
+            searchRequest = false
+            searchTitle = ""
+        }
+        
         return collections.count
     }
 
@@ -263,6 +268,7 @@ class CollectionViewController: UICollectionViewController
         cell.image.image = image
 
         searchRequest = false
+        searchTitle = ""
         return cell
     }
 
@@ -327,8 +333,7 @@ class CollectionViewController: UICollectionViewController
             print(#function)
         }
         let myIngCoreData:ingCoreData = ingCoreData()
-        if searchRequest == true
-        && searchTitle != ""
+        if (searchRequest == true) && (searchTitle != "")
         {
             collections = myIngCoreData.searchRecommend(title: searchTitle)
         }
