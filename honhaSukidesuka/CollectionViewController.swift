@@ -8,14 +8,37 @@
 
 import UIKit
 
+
 private let reuseIdentifier = "colleko"
 
 class CollectionViewController: UICollectionViewController
 ,UICollectionViewDelegateFlowLayout
+,SideMenuDelegate
+    ,UIGestureRecognizerDelegate
+    ,UITextFieldDelegate
 {
+    func onClickButton(sender: UIButton) {
+        //
+        switch sender.tag {
+        case 0:
+            performSegue(withIdentifier: "segueta", sender: nil)
+
+        case 1:
+
+            sideView.zendashi()
+            self.searchReload()
+            
+        default:
+            return
+        }
+    }
+    
 
     @IBOutlet var myCollectionView: UICollectionView!
     var collections:[NSDictionary] = []
+
+    var sideView:SideMenu!
+    @IBOutlet var rightEdgePanGesture: UIScreenEdgePanGestureRecognizer!
 
     override func viewDidLoad() {
         print(#function)
@@ -31,11 +54,35 @@ class CollectionViewController: UICollectionViewController
         //self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         // Do any additional setup after loading the view.
+        // Sidebar
+        let imageArray = [UIImage(named:"read.png")!,UIImage(named:"search.png")!]
+        sideView = SideMenu(image:imageArray, parentViewController:self)
+        self.view.addSubview(sideView)
+        
+        rightEdgePanGesture.edges = .right
+        myCollectionView.addGestureRecognizer(rightEdgePanGesture)
+        rightEdgePanGesture.delegate = self
+        sideView.delegate = self
+        sideView.searchTextField.delegate = self
     }
 
     override func viewWillAppear(_ animated: Bool) {
         print(#function)
+        self.configureObserver()
         reloadForCollectionView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print(#function)
+        print(rightEdgePanGesture.debugDescription)
+        print(rightEdgePanGesture.description)
+        print(myCollectionView.panGestureRecognizer.description)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.removeObserver() // Notificationを画面が消えるときに削除
+
     }
     override func didReceiveMemoryWarning() {
         print(#function)
@@ -53,9 +100,54 @@ class CollectionViewController: UICollectionViewController
     }
     */
     //=============================
-    // Gesture:セグエ
+    // MARK:Gesture
     //=============================
+    //スワイプを検出したときの挙動
+    @IBAction func EdgePanGesture(_ sender: UIScreenEdgePanGestureRecognizer) {
+        sideView.getEdgeGesture(sender: sender)
+        print(#function)
+    }
     
+    @IBAction func tapReload(_ sender: UIBarButtonItem) {
+        reloadForCollectionView()
+    }
+    
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        print("2222222222")
+        print(otherGestureRecognizer.description)
+        return true
+
+    }
+    // 他のビューを触ったら、キーボードが閉じる
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+        // moveDisplay = true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+        
+        // キーボードを閉じる
+        textField.resignFirstResponder()
+        
+        
+        return true
+    }
+    
+    
+    // 検索
+    var searchRequest:Bool = false
+    var searchTitle:String = ""
+    func searchReload() {
+        if sideView.searchTextField.text! == "" { return } // 空白だったらzendashi
+        searchRequest = true
+        searchTitle = sideView.searchTextField.text!
+        reloadForCollectionView()
+        view.endEditing(true)
+        sideView.clearViewTapped()
+        sideView.searchTextField.text! = ""
+
+    }
     
     //=============================
     // MARK:セグエ
@@ -81,6 +173,63 @@ class CollectionViewController: UICollectionViewController
         myCollectionView.reloadData()
         
     }
+    
+    
+    //=================================
+    // MARK:画面ずらす処理
+    //=================================
+    // Notificationを設定
+    func configureObserver() {
+        
+        let notification = NotificationCenter.default
+        notification.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        notification.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    // Notificationを削除
+    func removeObserver() {
+        
+        let notification = NotificationCenter.default
+        notification.removeObserver(self)
+    }
+    
+    // キーボードが現れた時に、画面全体をずらす。
+    var keyboadON:Bool = false
+    var keyboadHeight:CGFloat = 0
+    @objc func keyboardWillShow(notification: Notification?) {
+        print(#function)
+        if keyboadON {return } // キーボード出てたら実行しない
+        
+        let rect = (notification?.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+        let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
+        UIView.animate(withDuration: duration!, animations: { () in
+            let transform = CGAffineTransform(translationX: 0, y: -(rect?.size.height)!)
+            self.keyboadHeight = (rect?.size.height)!
+            //self.sideView.transform = transform
+            UIView.animate(withDuration: 0.8,
+                           animations: {
+                            self.sideView.frame.origin.y = self.sideView.frame.origin.y-(self.keyboadHeight)
+            },
+                           completion:nil)
+        })
+        keyboadON = true
+    }
+    
+    // キーボードが消えたときに、画面を戻す
+    @objc func keyboardWillHide(notification: Notification?) {
+        print(#function)
+        let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? Double
+        UIView.animate(withDuration: duration!, animations: { () in
+            
+            self.sideView.transform = CGAffineTransform.identity
+            UIView.animate(withDuration: 0.8,
+                           animations: {
+                            self.sideView.frame.origin.y = self.sideView.frame.origin.y+(self.keyboadHeight)
+            },
+                           completion:nil)
+        })
+        keyboadON = false
+    }
     // MARK: UICollectionViewDataSource
 
 //    override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -93,8 +242,10 @@ class CollectionViewController: UICollectionViewController
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         print(#function)
         // #warning Incomplete implementation, return the number of items
-        let myCoreData = ingCoreData()
-        return myCoreData.bookCount
+        
+       // let myCoreData = ingCoreData()
+       // return myCoreData.bookCount
+        return collections.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -111,6 +262,7 @@ class CollectionViewController: UICollectionViewController
         let image = myLocalImage.readJpgImageInDocument(nameOfImage: "image\(id).jpg")
         cell.image.image = image
 
+        searchRequest = false
         return cell
     }
 
@@ -175,8 +327,14 @@ class CollectionViewController: UICollectionViewController
             print(#function)
         }
         let myIngCoreData:ingCoreData = ingCoreData()
-        collections = myIngCoreData.readRecommendAll()
-        
+        if searchRequest == true
+        && searchTitle != ""
+        {
+            collections = myIngCoreData.searchRecommend(title: searchTitle)
+        }
+        else {
+            collections = myIngCoreData.readRecommendAll()
+        }
         myCollectionView.reloadData()
         
     }
@@ -202,4 +360,6 @@ class CollectionViewController: UICollectionViewController
 //        return margin
 //    }
 
+    
 }
+

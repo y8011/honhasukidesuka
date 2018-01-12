@@ -194,6 +194,57 @@ class ingCoreData {
     }
     
     //==============================
+    // search title
+    //==============================
+    func searchRecommend(title:String) -> [NSDictionary] {
+        if Constants.DEBUG == true {
+            print(#function)
+        }
+        //エンティティを操作するためのオブジェクトを作成する
+        let viewContext = appDalegate.persistentContainer.viewContext
+        var dicss:[NSDictionary] = []
+
+        //どのエンティティからデータを取得してくるか設定
+        let query:NSFetchRequest<RecommendBookList> =  RecommendBookList.fetchRequest()
+        
+        
+        //===== 絞り込み =====
+        let r_idPredicate = NSPredicate(format: "title CONTAINS %@", title)
+        print(r_idPredicate)
+        query.predicate = r_idPredicate
+        
+        
+        //===== データ１件取得（r_idを指定しているので) =====
+        //データを一括取得
+        do {
+            
+            let fetchResults = try viewContext.fetch(query)
+            if( fetchResults.count != 0) {
+                for fetch:AnyObject in fetchResults {
+                    let id:Int = (fetch.value(forKey: "bookid") as? Int)!
+                    let title:String = (fetch.value(forKey: "title") as? String)!
+                    let author:String = (fetch.value(forKey: "author") as? String)!
+                    let recommendation:String = (fetch.value(forKey: "recommendation") as? String)!
+                    let link:String = (fetch.value(forKey: "linkURL") as? String)!
+                    let createDate:NSDate = (fetch.value(forKey: "createDate") as? NSDate)!
+                    
+                    let dic =  ["bookid":id,"title":title,"author":author,"recommendation":recommendation ,"linkURL":link,"createDate":createDate] as [String : Any]
+                    
+                    
+                    
+                    dicss.append(dic as NSDictionary)
+                    
+                    
+                }
+            }
+        } catch  {
+            
+        }
+        
+        return dicss
+    }
+    
+    //==============================
     // Delete all
     //==============================
     func deleteRecommendAll() {
@@ -274,7 +325,7 @@ class ingCoreData {
     }
     
     //==============================
-    // Edit　今回は使わないけど記述残しとく
+    // Edit
     //==============================
     
     func editRecommend(id:Int, title:String, author:String, recommendation:String, link:String) {

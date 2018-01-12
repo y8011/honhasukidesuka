@@ -47,6 +47,8 @@ class submitViewController: UIViewController
         submitButton.layer.cornerRadius = 5
         submitButton.layer.masksToBounds = true
         
+        self.navigationItem.title = "新規おすすめ書籍登録"
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

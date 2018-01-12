@@ -178,7 +178,7 @@ class detailViewController: UIViewController
         }
         else { // edit完了
             submitButton.setTitle("編集!", for: .normal)
-            submitButton.backgroundColor = UIColor(red: 0, green: 164/255, blue: 255/255, alpha: 1)
+            submitButton.backgroundColor = UIColor(red: 234/255, green: 85/255, blue: 18/255, alpha: 1)
             UIView.animate(withDuration: 0.2, animations: {
                 
             self.view.backgroundColor = UIColor.white
