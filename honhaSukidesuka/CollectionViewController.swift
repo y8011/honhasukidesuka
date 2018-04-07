@@ -301,8 +301,28 @@ class CollectionViewController: UICollectionViewController
         return true
     }
  
+//        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//            if indexPath.row % 3 == 0 {
+//                return CGSize(width: 100.0, height: 100.0)
+//            }
+//            return CGSize(width: 60.0, height: 60.0)
+//        }
+//
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-    /*
+        let width = UIScreen.main.bounds.width
+        
+        var colNum:CGFloat = 2
+        if UIDevice.current.model == "iPad" {
+            colNum = 3
+        }
+        let widthOfCol  = (width - margin * (colNum + 1)) / colNum
+        let heightOfCol = widthOfCol * 195 / 151
+         //   return CGSize(width: 151, height: 195)
+        return CGSize(width: widthOfCol, height: heightOfCol)
+
+    }
+    
     // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
     override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
         return false
@@ -315,7 +335,7 @@ class CollectionViewController: UICollectionViewController
     override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
     
     }
-    */
+    
 
     private func collectionView(_ collectionView: UICollectionView,
     layout collectionViewLayout: UICollectionViewLayout,
@@ -345,25 +365,22 @@ class CollectionViewController: UICollectionViewController
     }
     
     
-//    let margin: CGFloat = 3.0
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        if indexPath.row % 3 == 0 {
-//            return CGSize(width: 100.0, height: 100.0)
-//        }
-//        return CGSize(width: 60.0, height: 60.0)
-//    }
-//    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-//        return UIEdgeInsets(top: margin, left: margin, bottom: margin, right: margin)
-//    }
-//    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        return margin
-//    }
-//    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-//        return margin
-//    }
+
+    let margin: CGFloat = 8.0
+
+    // 画面の端からの距離
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: margin, left: margin, bottom: margin, right: margin)
+    }
+    
+    // collectionView同士の幅、横軸
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return margin
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return margin
+    }
 
     
 }
