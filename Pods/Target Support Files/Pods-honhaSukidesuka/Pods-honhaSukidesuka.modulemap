@@ -1,0 +1,6 @@
+framework module Pods_honhaSukidesuka {
+  umbrella header "Pods-honhaSukidesuka-umbrella.h"
+
+  export *
+  module * { export * }
+}

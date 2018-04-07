@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "honhaSukidesuka/ingFirebase.swift"
+            timestampString = "540013796.668411"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "ingFirebase"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "honhaSukidesuka.ingFirebase.bookCount.getter : Swift.Int"
+                  moduleName = "honhaSukidesuka"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yuka/Documents/iOS2017_1002/honhaSukidesuka/honhaSukidesuka/ingFirebase.swift"
+                  timestampString = "540011618.038751"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "23"
+                  endingLineNumber = "23"
+                  offsetFromSymbolStart = "72">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "honhaSukidesuka.ingFirebase.bookCount.setter : Swift.Int"
+                  moduleName = "honhaSukidesuka"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yuka/Documents/iOS2017_1002/honhaSukidesuka/honhaSukidesuka/ingFirebase.swift"
+                  timestampString = "540011618.042838"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "23"
+                  endingLineNumber = "23"
+                  offsetFromSymbolStart = "77">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "honhaSukidesuka.ingFirebase.init() -&gt; honhaSukidesuka.ingFirebase"
+                  moduleName = "honhaSukidesuka"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/yuka/Documents/iOS2017_1002/honhaSukidesuka/honhaSukidesuka/ingFirebase.swift"
+                  timestampString = "540011618.046087"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "23"
+                  endingLineNumber = "23"
+                  offsetFromSymbolStart = "525">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
