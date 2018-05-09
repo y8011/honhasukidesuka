@@ -52,7 +52,7 @@ class SideMenu: UIView {
         self.buttonSet(num: image.count,image: image)
  ////////////////////////////////////追加
         searchTextField = UITextField(frame: CGRect(x:80+20+25,
-                                                  y:(Int(UIScreen.main.bounds.height) - (100+120*1-40+15)),
+                                                  y:(Int(UIScreen.main.bounds.height) - (100+120*1-buttonSize/2+15)),
                                                   width:Int(UIScreen.main.bounds.width/2), height:30))
         searchTextField.layer.cornerRadius = 5
         searchTextField.backgroundColor = UIColor.white
@@ -78,6 +78,21 @@ class SideMenu: UIView {
         clearView.isHidden = true
         clearView.addGestureRecognizer(tapGesture)
         self.addGestureRecognizer(tapGesture)
+        
+        let swipeRightGesture = UISwipeGestureRecognizer(
+            target: self,
+            action: #selector(self.clearViewTapped)
+        )
+        swipeRightGesture.direction = .right
+//        clearView.addGestureRecognizer(swipeRightGesture)
+        self.addGestureRecognizer(swipeRightGesture)
+        let swipeLeftGesture = UISwipeGestureRecognizer(
+            target: self,
+            action: #selector(self.zendashi)
+        )
+        swipeLeftGesture.direction = .left
+//        clearView.addGestureRecognizer(swipeLeftGesture)
+        self.addGestureRecognizer(swipeLeftGesture)
     }
     
     @objc func clearViewTapped(){
@@ -103,22 +118,24 @@ class SideMenu: UIView {
     
     //親ビューで指定した画像の数だけボタンを生成、配置
     var searchButton:UIButton!
+    let buttonSize:Int = 60
+
     func buttonSet(num:Int, image:[UIImage]){
         
         print(#function)
         for i in 0..<num{
             let button =
-                UIButton(frame:CGRect(x:20,
+                UIButton(frame:CGRect(x:30,
                                       y:(Int(UIScreen.main.bounds.height) - (100+120*i)),
-                                      width:80, height:80))
+                                      width:buttonSize, height:buttonSize))
             //ボタンの画像
             button.setImage(image[i], for: .normal)
-            //ボタンの四隅に余白をつける
-            button.imageEdgeInsets = UIEdgeInsetsMake(20, 20, 20, 20)
+            //ボタンの四隅に余白をつける 画像の大きさにも関わる
+            button.imageEdgeInsets = UIEdgeInsetsMake(11, 11, 11, 11)
             //ボタンの背景色
             button.backgroundColor = UIColor.white
             // サイズの半分の値を設定 (丸いボタンにするため)
-            button.layer.cornerRadius = 40
+            button.layer.cornerRadius = CGFloat(buttonSize/2)
             //ボタンにタグをつける
             button.tag = i
             //ボタンをおした時の動作
@@ -144,7 +161,6 @@ class SideMenu: UIView {
         //ドラッグ終了時の処理
         if(sender.state == UIGestureRecognizerState.ended) {
             if(self.frame.origin.x < UIScreen.main.bounds.width - parentVC.view.frame.size.width/4) {
-                print("成功！")
                 
                 //ドラッグの距離が画面幅の1/2を超えた場合は全部出す
                 if(self.frame.origin.x < UIScreen.main.bounds.width - parentVC.view.frame.size.width/2)
@@ -187,7 +203,7 @@ class SideMenu: UIView {
         self.delegate?.onClickButton(sender: sender)
     }
     
-    func zendashi(){
+    @objc func zendashi(){
         UIView.animate(withDuration: 0.8,
                        animations: {
                         self.frame.origin.x = 0

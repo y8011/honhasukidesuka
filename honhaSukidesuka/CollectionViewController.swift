@@ -68,20 +68,20 @@ class CollectionViewController: UICollectionViewController
 
     override func viewWillAppear(_ animated: Bool) {
         print(#function)
-        self.configureObserver()
+//        self.configureObserver()
         reloadForCollectionView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         print(#function)
-        print(rightEdgePanGesture.debugDescription)
-        print(rightEdgePanGesture.description)
-        print(myCollectionView.panGestureRecognizer.description)
+//        print(rightEdgePanGesture.debugDescription)
+//        print(rightEdgePanGesture.description)
+//        print(myCollectionView.panGestureRecognizer.description)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.removeObserver() // Notificationを画面が消えるときに削除
+//        self.removeObserver() // Notificationを画面が消えるときに削除
 
     }
     override func didReceiveMemoryWarning() {
@@ -114,7 +114,6 @@ class CollectionViewController: UICollectionViewController
     
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        print("2222222222")
         print(otherGestureRecognizer.description)
         return true
 
@@ -128,7 +127,9 @@ class CollectionViewController: UICollectionViewController
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         
         // キーボードを閉じる
-        textField.resignFirstResponder()
+//        textField.resignFirstResponder()
+        self.searchReload()
+
         
         
         return true
@@ -178,58 +179,58 @@ class CollectionViewController: UICollectionViewController
     //=================================
     // MARK:画面ずらす処理
     //=================================
-    // Notificationを設定
-    func configureObserver() {
-        
-        let notification = NotificationCenter.default
-        notification.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        notification.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-    }
-    
-    // Notificationを削除
-    func removeObserver() {
-        
-        let notification = NotificationCenter.default
-        notification.removeObserver(self)
-    }
+//    // Notificationを設定
+//    func configureObserver() {
+//
+//        let notification = NotificationCenter.default
+//        notification.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+//        notification.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+//    }
+//
+//    // Notificationを削除
+//    func removeObserver() {
+//
+//        let notification = NotificationCenter.default
+//        notification.removeObserver(self)
+//    }
     
     // キーボードが現れた時に、画面全体をずらす。
-    var keyboadON:Bool = false
-    var keyboadHeight:CGFloat = 0
-    @objc func keyboardWillShow(notification: Notification?) {
-        print(#function)
-        if keyboadON {return } // キーボード出てたら実行しない
-        
-        let rect = (notification?.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
-        let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
-        UIView.animate(withDuration: duration!, animations: { () in
-            let transform = CGAffineTransform(translationX: 0, y: -(rect?.size.height)!)
-            self.keyboadHeight = (rect?.size.height)!
-            //self.sideView.transform = transform
-            UIView.animate(withDuration: 0.8,
-                           animations: {
-                            self.sideView.frame.origin.y = self.sideView.frame.origin.y-(self.keyboadHeight)
-            },
-                           completion:nil)
-        })
-        keyboadON = true
-    }
-    
-    // キーボードが消えたときに、画面を戻す
-    @objc func keyboardWillHide(notification: Notification?) {
-        print(#function)
-        let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? Double
-        UIView.animate(withDuration: duration!, animations: { () in
-            
-            self.sideView.transform = CGAffineTransform.identity
-            UIView.animate(withDuration: 0.8,
-                           animations: {
-                            self.sideView.frame.origin.y = self.sideView.frame.origin.y+(self.keyboadHeight)
-            },
-                           completion:nil)
-        })
-        keyboadON = false
-    }
+//    var keyboadON:Bool = false
+//    var keyboadHeight:CGFloat = 0
+//    @objc func keyboardWillShow(notification: Notification?) {
+//        print(#function)
+//        if keyboadON {return } // キーボード出てたら実行しない
+//
+//        let rect = (notification?.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+//        let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
+//        UIView.animate(withDuration: duration!, animations: { () in
+//            let transform = CGAffineTransform(translationX: 0, y: -(rect?.size.height)!)
+//            self.keyboadHeight = (rect?.size.height)!
+//            //self.sideView.transform = transform
+//            UIView.animate(withDuration: 0.8,
+//                           animations: {
+//                            self.sideView.frame.origin.y = self.sideView.frame.origin.y-(self.keyboadHeight)
+//            },
+//                           completion:nil)
+//        })
+//        keyboadON = true
+//    }
+//
+//    // キーボードが消えたときに、画面を戻す
+//    @objc func keyboardWillHide(notification: Notification?) {
+//        print(#function)
+//        let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? Double
+//        UIView.animate(withDuration: duration!, animations: { () in
+//
+//            self.sideView.transform = CGAffineTransform.identity
+//            UIView.animate(withDuration: 0.8,
+//                           animations: {
+//                            self.sideView.frame.origin.y = self.sideView.frame.origin.y+(self.keyboadHeight)
+//            },
+//                           completion:nil)
+//        })
+//        keyboadON = false
+//    }
     // MARK: UICollectionViewDataSource
 
 //    override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -287,9 +288,7 @@ class CollectionViewController: UICollectionViewController
     // Uncomment this method to specify if the specified item should be selected
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         print(#function)
-        print(indexPath.section)
-        print(indexPath.row)
-        
+
         
         let cell = collectionView.cellForItem(at: indexPath) as! customCell
         selectedIndex =   cell.id

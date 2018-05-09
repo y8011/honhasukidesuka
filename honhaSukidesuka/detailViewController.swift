@@ -13,6 +13,12 @@ class detailViewController: UIViewController
     , UINavigationControllerDelegate
 {
 
+    // ダミー初期化
+    var statusAlert:StatusAlert = StatusAlert.instantiate(withImage: UIImage(named: "Okayu_icon.jpg"), title: "dummy", message: "")
+    
+
+    
+
     var passedIndex:Int = -1
     
     @IBOutlet weak var submitButton: UIButton!
@@ -33,7 +39,7 @@ class detailViewController: UIViewController
         super.viewDidLoad()
         
         bookImageView.layer.borderWidth = 0.1
-        bookImageView.layer.cornerRadius = 5
+        bookImageView.layer.cornerRadius = 0
         bookImageView.layer.masksToBounds = true
         recomendTextView.layer.borderWidth = 0.1
         recomendTextView.layer.cornerRadius = 5
@@ -42,14 +48,14 @@ class detailViewController: UIViewController
         deleteButton.layer.cornerRadius = 5
         deleteButton.layer.masksToBounds = true
 
-        
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
         if Constants.DEBUG == true {
             print(#function)
         }
-        self.configureObserver()
+//        self.configureObserver()
 
         
  
@@ -89,7 +95,7 @@ class detailViewController: UIViewController
         print(#function)
         
         super.viewWillDisappear(animated)
-        self.removeObserver() // Notificationを画面が消えるときに削除
+//        self.removeObserver() // Notificationを画面が消えるときに削除
         
     }
     
@@ -141,11 +147,11 @@ class detailViewController: UIViewController
         amazonButton.setTitle(title, for: .highlighted)
         let bookTitle = titleTextField.text!
         var urlStr = "https://www.amazon.co.jp/s/ref=nb_sb_noss_2?__mk_ja_JP=\(bookTitle)&url=search-alias%3Daps&field-keywords=\(bookTitle)&x=0&Ay=0"
-        print(urlStr)
+
         amazonLink = urlStr.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
-        print(amazonLink)
+
         twitterButton.titleLabel?.font = font
-        title = "\u{f081}"
+        title = "\u{f099}"
         twitterButton.setTitle(title, for: .normal)
         twitterButton.setTitle(title, for: .highlighted)
         urlStr = "https://twitter.com/search/\(bookTitle)"
@@ -169,7 +175,7 @@ class detailViewController: UIViewController
         bookImageView.isUserInteractionEnabled = isDuringEdit
         
         if isDuringEdit == true {
-            submitButton.setTitle("完了!", for: .normal)
+            submitButton.setTitle("できた", for: .normal)
             submitButton.backgroundColor = UIColor.brown
             UIView.animate(withDuration: 0.2, animations: {
                 self.view.backgroundColor = UIColor(red: 255/255, green: 225/255, blue: 225/255, alpha: 1)
@@ -177,7 +183,16 @@ class detailViewController: UIViewController
             
         }
         else { // edit完了
-            submitButton.setTitle("編集!", for: .normal)
+            let font = UIFont(name: "FontAwesome", size: 22)
+            submitButton.titleLabel?.font = font
+
+            if  (titleTextField.text == "" )
+            {
+                statusAlert = alertNormal1(s_title: "だめ", s_message: "本のタイトルは入れてください。",duration: 5, tag: 1)
+                statusAlert.showInKeyWindow()
+                return
+            }
+            submitButton.setTitle("変える", for: .normal)
             submitButton.backgroundColor = UIColor(red: 234/255, green: 85/255, blue: 18/255, alpha: 1)
             UIView.animate(withDuration: 0.2, animations: {
                 
@@ -195,33 +210,39 @@ class detailViewController: UIViewController
     
     // 削除ボタン押した時
     @IBAction func tapDelete(_ sender: UIButton) {
-        alertDelete(s_title: "削除します", s_message: "本当に削除しますか？")
+        statusAlert = alertNormal1(s_title: "さようなら", s_message: "本当に削除しますか？", duration: 3, tag: 2)
+        statusAlert.showInKeyWindow()
         
     }
     
     
+    
+    
     // 本のイメージを押した時
     @IBAction func tapImage(_ sender: UITapGestureRecognizer) {
-        alertAction2(s_title: "本の写真を選択して下さい", s_message: "")
+        statusAlert = alertNormal1(s_title: "本の写真を選択して下さい", s_message: "", duration: 5, tag: 4)
+        statusAlert.showInKeyWindow()
+
+//        alertAction2(s_title: "本の写真を選択して下さい", s_message: "")
     }
     
-    //リターンでキーボードを閉じる
-    @IBAction func editDidEndOnExit(_ sender: UITextField) {
-        switch sender.tag {
-        case 1:
-            authorsTextField.becomeFirstResponder()
-        case 2:
-            //sender.endEditing(true)
-            recomendTextView.becomeFirstResponder()
-
-        default:
-            sender.endEditing(true)
-        }
-    }
-    // 他のビューを触ったら、キーボードが閉じる
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
+//    //リターンでキーボードを閉じる
+//    @IBAction func editDidEndOnExit(_ sender: UITextField) {
+//        switch sender.tag {
+//        case 1:
+//            authorsTextField.becomeFirstResponder()
+//        case 2:
+//            //sender.endEditing(true)
+//            recomendTextView.becomeFirstResponder()
+//
+//        default:
+//            sender.endEditing(true)
+//        }
+//    }
+//    // 他のビューを触ったら、キーボードが閉じる
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        view.endEditing(true)
+//    }
     
     @IBAction func tapURL(_ sender: UITapGestureRecognizer) {
         if isDuringEdit == false {
@@ -230,7 +251,6 @@ class detailViewController: UIViewController
             print("tapURL:\(URLString)")
             guard let URL = NSURL(string: URLString) else {return }
             let url = URL as URL
-            print(url)
             UIApplication.shared.open(url)
         }
         else {
@@ -254,7 +274,6 @@ class detailViewController: UIViewController
         }
         guard let URL = NSURL(string: URLString) else {return }
         let url = URL as URL
-        print(url)
         UIApplication.shared.open(url)
 
     }
@@ -347,44 +366,44 @@ class detailViewController: UIViewController
     // MARK:画面ずらす処理
     //=================================
     // Notificationを設定
-    func configureObserver() {
-        
-        let notification = NotificationCenter.default
-        notification.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        notification.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-    }
+//    func configureObserver() {
+//        
+//        let notification = NotificationCenter.default
+//        notification.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+//        notification.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+//    }
+//    
+//    // Notificationを削除
+//    func removeObserver() {
+//        
+//        let notification = NotificationCenter.default
+//        notification.removeObserver(self)
+//    }
     
-    // Notificationを削除
-    func removeObserver() {
-        
-        let notification = NotificationCenter.default
-        notification.removeObserver(self)
-    }
-    
-    // キーボードが現れた時に、画面全体をずらす。
-    @objc func keyboardWillShow(notification: Notification?) {
-        print(#function)
-//        if moveDisplay == true {
-            let rect = (notification?.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
-            let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
-            UIView.animate(withDuration: duration!, animations: { () in
-                let transform = CGAffineTransform(translationX: 0, y: -(rect?.size.height)!)
-                self.view.transform = transform
-                
-            })
-//        }
-    }
+//    // キーボードが現れた時に、画面全体をずらす。
+//    @objc func keyboardWillShow(notification: Notification?) {
+//        print(#function)
+////        if moveDisplay == true {
+//            let rect = (notification?.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+//            let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
+//            UIView.animate(withDuration: duration!, animations: { () in
+//                let transform = CGAffineTransform(translationX: 0, y: -(rect?.size.height)!)
+//                self.view.transform = transform
+//
+//            })
+////        }
+//    }
     
     
-    // キーボードが消えたときに、画面を戻す
-    @objc func keyboardWillHide(notification: Notification?) {
-        print(#function)
-        let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? Double
-        UIView.animate(withDuration: duration!, animations: { () in
-            
-            self.view.transform = CGAffineTransform.identity
-        })
-    }
+//    // キーボードが消えたときに、画面を戻す
+//    @objc func keyboardWillHide(notification: Notification?) {
+//        print(#function)
+//        let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? Double
+//        UIView.animate(withDuration: duration!, animations: { () in
+//
+//            self.view.transform = CGAffineTransform.identity
+//        })
+//    }
     //=============================
     // MARK:deleteデータ
     //=============================
@@ -401,82 +420,82 @@ class detailViewController: UIViewController
     //=============================
     // MARK:Alert
     //=============================
-    func alertDelete(s_title:String, s_message:String){
-        
-        //部品となるアラート
-        let alert = UIAlertController(
-            title: s_title ,
-            message: s_message,
-            preferredStyle: .alert
-        )
-        
-        //ボタンを増やしたいときは、addActionをもう一つ作ればよい
-        alert.addAction(
-            UIAlertAction(
-                title: "はい",
-                style: .default,
-                handler: {
-                    action in self.deleteDetail()
-            }
-            )
-        )
-        
-
-        alert.addAction(
-            UIAlertAction(
-                title: "やめる",
-                style: .default,
-                handler: nil
-            )
-        )
-        // アラート表示
-        present(alert, animated: true, completion: nil)
-        
-        
-    }
+//    func alertDelete(s_title:String, s_message:String){
+//
+//        //部品となるアラート
+//        let alert = UIAlertController(
+//            title: s_title ,
+//            message: s_message,
+//            preferredStyle: .alert
+//        )
+//
+//        //ボタンを増やしたいときは、addActionをもう一つ作ればよい
+//        alert.addAction(
+//            UIAlertAction(
+//                title: "はい",
+//                style: .default,
+//                handler: {
+//                    action in self.deleteDetail()
+//            }
+//            )
+//        )
+//
+//
+//        alert.addAction(
+//            UIAlertAction(
+//                title: "やめる",
+//                style: .default,
+//                handler: nil
+//            )
+//        )
+//        // アラート表示
+//        present(alert, animated: true, completion: nil)
+//
+//
+//    }
     
-    func alertAction2(s_title:String, s_message:String){
-        
-        //部品となるアラート
-        let alert = UIAlertController(
-            title: s_title ,
-            message: s_message,
-            preferredStyle: .alert
-        )
-        
-        //ボタンを増やしたいときは、addActionをもう一つ作ればよい
-        alert.addAction(
-            UIAlertAction(
-                title: "カメラ",
-                style: .default,
-                handler: {
-                    action in self.showCamera()
-            }
-            )
-        )
-        
-        alert.addAction(
-            UIAlertAction(
-                title: "フォトアルバム",
-                style: .default,
-                handler: {
-                    action in self.showAlbum()
-            }
-            )
-        )
-        
-        alert.addAction(
-            UIAlertAction(
-                title: "やめる",
-                style: .default,
-                handler: nil
-            )
-        )
-        // アラート表示
-        present(alert, animated: true, completion: nil)
-        
-        
-    }
+//    func alertAction2(s_title:String, s_message:String){
+//
+//        //部品となるアラート
+//        let alert = UIAlertController(
+//            title: s_title ,
+//            message: s_message,
+//            preferredStyle: .alert
+//        )
+//
+//        //ボタンを増やしたいときは、addActionをもう一つ作ればよい
+//        alert.addAction(
+//            UIAlertAction(
+//                title: "カメラ",
+//                style: .default,
+//                handler: {
+//                    action in self.showCamera()
+//            }
+//            )
+//        )
+//
+//        alert.addAction(
+//            UIAlertAction(
+//                title: "フォトアルバム",
+//                style: .default,
+//                handler: {
+//                    action in self.showAlbum()
+//            }
+//            )
+//        )
+//
+//        alert.addAction(
+//            UIAlertAction(
+//                title: "やめる",
+//                style: .default,
+//                handler: nil
+//            )
+//        )
+//        // アラート表示
+//        present(alert, animated: true, completion: nil)
+//
+//
+//    }
     
 
 

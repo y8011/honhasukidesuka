@@ -1,0 +1,6 @@
+framework module Pods_honhaSukidesukaTests {
+  umbrella header "Pods-honhaSukidesukaTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
