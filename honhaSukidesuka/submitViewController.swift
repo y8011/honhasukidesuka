@@ -35,26 +35,29 @@ class submitViewController: UIViewController
     var bookImageURL:String = ""
     var bookAmazonURL:String = ""
     var bookISDN:String = ""
-    
+
+    // 通知用ダミー初期化
+    var statusAlert:StatusAlert = StatusAlert.instantiate(withImage: UIImage(named: "Okayu_icon.jpg"), title: "dummy", message: "")
+
     override func viewDidLoad() {
         print(#function)
         super.viewDidLoad()
         
         bookImageView.layer.borderWidth = 0.1
-        bookImageView.layer.cornerRadius = 5
+        bookImageView.layer.cornerRadius = 0
         recomendTextView.layer.borderWidth = 0.1
         recomendTextView.layer.cornerRadius = 5
         submitButton.layer.cornerRadius = 5
         submitButton.layer.masksToBounds = true
         
-        self.navigationItem.title = "新規おすすめ書籍登録"
+        self.navigationItem.title = "新規書籍登録"
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         print(#function)
         super.viewWillAppear(animated)
-        self.configureObserver()
+//        self.configureObserver()
         
     }
     
@@ -80,7 +83,7 @@ class submitViewController: UIViewController
         print(#function)
         
         super.viewWillDisappear(animated)
-        self.removeObserver() // Notificationを画面が消えるときに削除
+//        self.removeObserver() // Notificationを画面が消えるときに削除
         self.captureSession.stopRunning()
 
     }
@@ -89,37 +92,38 @@ class submitViewController: UIViewController
     // MARK:Gesture
     //==============================
     //リターンでキーボードを閉じる
-    @IBAction func editDidEndOnExit(_ sender: UITextField) {
-        switch sender.tag {
-        case 1:
-            authorsTextField.becomeFirstResponder()
-        case 2:
-            //sender.endEditing(true)
-            recomendTextView.becomeFirstResponder()
-            
-        default:
-            sender.endEditing(true)
-        }
-    }
+//    @IBAction func editDidEndOnExit(_ sender: UITextField) {
+//        switch sender.tag {
+//        case 1:
+//            authorsTextField.becomeFirstResponder()
+//        case 2:
+//            //sender.endEditing(true)
+//            recomendTextView.becomeFirstResponder()
+//            
+//        default:
+//            sender.endEditing(true)
+//        }
+//    }
     
     //おすすめ理由以外は、画面をずらさないようにするためのフラグ
     @IBAction func touchDown(_ sender: UITextField) {
        // moveDisplay = false　位置を変えたのでいつも必要になった
-        
+
     }
     
     // 他のビューを触ったら、キーボードが閉じる
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-       // moveDisplay = true
-    }
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        view.endEditing(true)
+//       // moveDisplay = true
+//    }
     
     // 登録ボタンを押した時
     @IBAction func tapSubmitButton(_ sender: Any) {
         if  (titleTextField.text == "" )
-         || (recomendTextView.text == "")
         {
-            alertNormal(s_title: "だめ", s_message: "本のタイトルとおすすめ理由は入れてください。",s_answer: "りょ")
+            statusAlert = alertNormal1(s_title: "だめ", s_message: "本のタイトルは入れてください。", duration: 5, tag: 3)
+            statusAlert.showInKeyWindow()
+
             return
         }
         let myCoreData:ingCoreData = ingCoreData()
@@ -133,8 +137,10 @@ class submitViewController: UIViewController
     
     // イメージをタップした時
     @IBAction func tapBookImage(_ sender: UITapGestureRecognizer) {
-        
-        alertAction2(s_title: "本の写真を選択して下さい", s_message: "")
+        statusAlert =  alertNormal1(s_title: "本の写真を選択して下さい", s_message: "", duration: 5, tag: 4)
+        statusAlert.showInKeyWindow()
+
+//        alertAction2(s_title: "本の写真を選択して下さい", s_message: "")
     }
     
     //========================
@@ -314,49 +320,50 @@ class submitViewController: UIViewController
     // MARK:画面ずらす処理
     //=================================
     // Notificationを設定
-    func configureObserver() {
-        
-        let notification = NotificationCenter.default
-        notification.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        notification.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-    }
-    
-    // Notificationを削除
-    func removeObserver() {
-        
-        let notification = NotificationCenter.default
-        notification.removeObserver(self)
-    }
-    
-    // キーボードが現れた時に、画面全体をずらす。
-    @objc func keyboardWillShow(notification: Notification?) {
-        print(#function)
-        if moveDisplay == true {
-            let rect = (notification?.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
-            let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
-            UIView.animate(withDuration: duration!, animations: { () in
-                let transform = CGAffineTransform(translationX: 0, y: -(rect?.size.height)!)
-                self.view.transform = transform
-                
-            })
-        }
-    }
-    
-    
-    // キーボードが消えたときに、画面を戻す
-    @objc func keyboardWillHide(notification: Notification?) {
-        print(#function)
-        let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? Double
-        UIView.animate(withDuration: duration!, animations: { () in
-            
-            self.view.transform = CGAffineTransform.identity
-        })
-    }
+//    func configureObserver() {
+//
+//        let notification = NotificationCenter.default
+//        notification.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+//        notification.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+//    }
+//
+//    // Notificationを削除
+//    func removeObserver() {
+//
+//        let notification = NotificationCenter.default
+//        notification.removeObserver(self)
+//    }
+//
+//    // キーボードが現れた時に、画面全体をずらす。
+//    @objc func keyboardWillShow(notification: Notification?) {
+//        print(#function)
+//        if moveDisplay == true {
+//            let rect = (notification?.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+//            let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
+//            UIView.animate(withDuration: duration!, animations: { () in
+//                let transform = CGAffineTransform(translationX: 0, y: -(rect?.size.height)!)
+//                self.view.transform = transform
+//
+//            })
+//        }
+//    }
+//
+//
+//    // キーボードが消えたときに、画面を戻す
+//    @objc func keyboardWillHide(notification: Notification?) {
+//        print(#function)
+//        let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? Double
+//        UIView.animate(withDuration: duration!, animations: { () in
+//
+//            self.view.transform = CGAffineTransform.identity
+//        })
+//    }
     
     
     func setResultLabel (text:String) {
         //resultTextLabel?.text = text
-        alertNormal(s_title: text, s_message: "", s_answer: "はい")
+//        alertNormal(s_title: text, s_message: "", s_answer: "はい")
+        alertNormal1(s_title: text, s_message: "", duration: 5, tag: 3)
     }
     
     func displayBookDetail() {
@@ -468,73 +475,50 @@ class submitViewController: UIViewController
     //=============================
     // MARK:Alert
     //=============================
-    func alertAction2(s_title:String, s_message:String){
-        
-        //部品となるアラート
-        let alert = UIAlertController(
-            title: s_title ,
-            message: s_message,
-            preferredStyle: .alert
-        )
-        
-        //ボタンを増やしたいときは、addActionをもう一つ作ればよい
-        alert.addAction(
-            UIAlertAction(
-                title: "カメラ",
-                style: .default,
-                handler: {
-                    action in self.showCamera()
-            }
-            )
-        )
-        
-        alert.addAction(
-            UIAlertAction(
-                title: "フォトアルバム",
-                style: .default,
-                handler: {
-                    action in self.showAlbum()
-            }
-            )
-        )
-        
-        alert.addAction(
-            UIAlertAction(
-                title: "やめる",
-                style: .default,
-                handler: nil
-            )
-        )
-        // アラート表示
-        present(alert, animated: true, completion: nil)
-        
-        
-    }
+//    func alertAction2(s_title:String, s_message:String){
+//        
+//        //部品となるアラート
+//        let alert = UIAlertController(
+//            title: s_title ,
+//            message: s_message,
+//            preferredStyle: .alert
+//        )
+//        
+//        //ボタンを増やしたいときは、addActionをもう一つ作ればよい
+//        alert.addAction(
+//            UIAlertAction(
+//                title: "カメラ",
+//                style: .default,
+//                handler: {
+//                    action in self.showCamera()
+//            }
+//            )
+//        )
+//        
+//        alert.addAction(
+//            UIAlertAction(
+//                title: "フォトアルバム",
+//                style: .default,
+//                handler: {
+//                    action in self.showAlbum()
+//            }
+//            )
+//        )
+//        
+//        alert.addAction(
+//            UIAlertAction(
+//                title: "やめる",
+//                style: .default,
+//                handler: nil
+//            )
+//        )
+//        // アラート表示
+//        present(alert, animated: true, completion: nil)
+//        
+//        
+//    }
     
-    func alertNormal(s_title:String, s_message:String,s_answer:String){
-        
-        //部品となるアラート
-        let alert = UIAlertController(
-            title: s_title ,
-            message: s_message,
-            preferredStyle: .alert
-        )
-        
-        //ボタンを増やしたいときは、addActionをもう一つ作ればよい
-        alert.addAction(
-            UIAlertAction(
-                title: s_answer,
-                style: .default,
-                handler: nil
-            )
-        )
-        
- 
-        // アラート表示
-        present(alert, animated: true, completion: nil)
-        
-        
-    }
+
     
 
     
