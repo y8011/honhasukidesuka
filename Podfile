@@ -6,20 +6,13 @@ target 'honhaSukidesuka' do
   use_frameworks!
 
   # Pods for honhaSukidesuka
-    pod 'IQKeyboardManagerSwift'
-    pod 'TapticEngine'
-    pod 'Spring', :git => 'https://github.com/MengTo/Spring.git'
-    pod 'StatusAlert'
+  pod 'IQKeyboardManagerSwift'
+    # pod 'TapticEngine'
+    #pod 'Spring' Swift4.2ように変更
+    #pod 'StatusAlert', '~> 1.1.0' 少し改造
+     pod 'ChameleonFramework/Swift', :git => 'https://github.com/ViccAlexander/Chameleon.git'
+     pod 'FontAwesome.swift'
+     pod 'AlamofireImage'
 
-
-  target 'honhaSukidesukaTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
-  target 'honhaSukidesukaUITests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
 
 end

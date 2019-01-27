@@ -2,7 +2,7 @@
 //  RecommendBookList+CoreDataClass.swift
 //  honhaSukidesuka
 //
-//  Created by yuka on 2018/01/11.
+//  Created by oyuka on 2018/09/16.
 //  Copyright © 2018年 yuka. All rights reserved.
 //
 //

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="searchCell" id="jZ5-TE-chh" customClass="searchTableCell" customModule="honhaSukidesuka">
+            <rect key="frame" x="0.0" y="0.0" width="402" height="129"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="jZ5-TE-chh" id="B21-65-dlr">
+                <rect key="frame" x="0.0" y="0.0" width="402" height="128.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="nTp-j8-bIw" userLabel="Stack View 2">
+                        <rect key="frame" x="20" y="11" width="362" height="368"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RdI-bX-7ya">
+                                <rect key="frame" x="0.0" y="0.0" width="260.5" height="368"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="RdI-bX-7ya" secondAttribute="height" multiplier="1: 1.4141" id="sbG-V2-GbA"/>
+                                </constraints>
+                            </imageView>
+                            <stackView opaque="NO" contentMode="TopLeft" axis="vertical" distribution="fillProportionally" alignment="top" spacing="2" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a9C-Bs-wUH" userLabel="Stack View1">
+                                <rect key="frame" x="264.5" y="0.0" width="97.5" height="368"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SVO-l8-eg0">
+                                        <rect key="frame" x="0.0" y="0.0" width="19.5" height="122.5"/>
+                                        <attributedString key="attributedText">
+                                            <fragment content="title">
+                                                <attributes>
+                                                    <color key="NSColor" red="0.12984204290000001" green="0.12984612579999999" blue="0.12984395030000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <font key="NSFont" size="12" name="TsukuARdGothic-Regular"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wMb-es-8xM">
+                                        <rect key="frame" x="0.0" y="112.5" width="23.5" height="105.5"/>
+                                        <attributedString key="attributedText">
+                                            <fragment content="autor">
+                                                <attributes>
+                                                    <font key="NSFont" size="10" name="TsukuARdGothic-Regular"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="oQV-J2-3MQ">
+                                        <rect key="frame" x="0.0" y="208" width="97" height="160"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VlU-wb-Ezv">
+                                                <rect key="frame" x="0.0" y="0.0" width="53.5" height="160"/>
+                                                <attributedString key="attributedText">
+                                                    <fragment content="publishDate">
+                                                        <attributes>
+                                                            <font key="NSFont" size="10" name="TsukuARdGothic-Regular"/>
+                                                        </attributes>
+                                                    </fragment>
+                                                </attributedString>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GgK-cS-Trl">
+                                                <rect key="frame" x="55.5" y="0.0" width="41.5" height="160"/>
+                                                <attributedString key="attributedText">
+                                                    <fragment content="publisher">
+                                                        <attributes>
+                                                            <font key="NSFont" size="10" name="TsukuARdGothic-Regular"/>
+                                                        </attributes>
+                                                    </fragment>
+                                                </attributedString>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="RdI-bX-7ya" firstAttribute="width" secondItem="nTp-j8-bIw" secondAttribute="width" multiplier="1/5" id="bFW-cG-Ig5"/>
+                        </constraints>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="nTp-j8-bIw" firstAttribute="top" secondItem="B21-65-dlr" secondAttribute="topMargin" id="47S-kF-Bhq"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="nTp-j8-bIw" secondAttribute="trailing" id="53C-8L-q4U"/>
+                    <constraint firstItem="nTp-j8-bIw" firstAttribute="leading" secondItem="B21-65-dlr" secondAttribute="leadingMargin" id="96V-3j-NJz"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="nTp-j8-bIw" secondAttribute="bottom" id="BIE-GC-4Y0"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="authorLabel" destination="wMb-es-8xM" id="UUP-qE-22U"/>
+                <outlet property="bookImage" destination="RdI-bX-7ya" id="TD5-0x-dDa"/>
+                <outlet property="publishDateLabel" destination="VlU-wb-Ezv" id="txm-xi-bkZ"/>
+                <outlet property="publisherLabel" destination="GgK-cS-Trl" id="VZb-fG-JkB"/>
+                <outlet property="titleLabel" destination="SVO-l8-eg0" id="Ydy-Hg-ZOH"/>
+            </connections>
+            <point key="canvasLocation" x="-396.80000000000001" y="-228.03598200899552"/>
+        </tableViewCell>
+    </objects>
+</document>
