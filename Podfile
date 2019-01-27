@@ -13,6 +13,8 @@ target 'honhaSukidesuka' do
      pod 'ChameleonFramework/Swift', :git => 'https://github.com/ViccAlexander/Chameleon.git'
      pod 'FontAwesome.swift'
      pod 'AlamofireImage'
+     pod 'Firebase/Core'
+     pod 'Firebase/AdMob'
 
 
 end

@@ -23,7 +23,7 @@
 import UIKit
 
 public extension String {
-    public var length: Int { return self.characters.count }
+    public var length: Int { return self.count }
     
     public func toURL() -> NSURL? {
         return NSURL(string: self)
@@ -51,10 +51,10 @@ public func delay(delay:Double, closure: @escaping ()->()) {
     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 }
 
-public func imageFromURL(_ Url: String) -> UIImage {
-    let url = Foundation.URL(string: Url)
-    let data = try? Data(contentsOf: url!)
-    return UIImage(data: data!)!
+public func imageFromURL(_ Url: String) -> UIImage? {
+    guard let url = Foundation.URL(string: Url) else { return nil    }
+    let data = try? Data(contentsOf: url)
+    return UIImage(data: data!)
 }
 
 public extension UIColor {
@@ -73,7 +73,7 @@ public extension UIColor {
         let scanner = Scanner(string: hex)
         var hexValue: CUnsignedLongLong = 0
         if scanner.scanHexInt64(&hexValue) {
-            switch (hex.characters.count) {
+            switch (hex.count) {
             case 3:
                 red   = CGFloat((hexValue & 0xF00) >> 8)       / 15.0
                 green = CGFloat((hexValue & 0x0F0) >> 4)       / 15.0

@@ -9,6 +9,7 @@
 import UIKit
 //import Spring
 import ChameleonFramework
+import GoogleMobileAds
 
 private let reuseIdentifier = "colleko"
 
@@ -49,6 +50,9 @@ class ListViewController: UIViewController
     @IBOutlet weak var button3: SpringButton!
     lazy var buttons = [button1,button2,button3]
 
+    var bannerView: GADBannerView!
+
+    
     override func viewDidLoad() {
         print(#function)
         super.viewDidLoad()
@@ -71,6 +75,18 @@ class ListViewController: UIViewController
         // Button
         initAddButton()
 
+        // Admob
+        bannerView = GADBannerView(adSize: kGADAdSizeBanner)
+        bannerView.adUnitID = AdmobBannerID
+        bannerView.rootViewController = self
+        bannerView.delegate = self
+
+        //広告のリクエスト
+        //リクエストオブジェクトを出して広告をもらってくる
+        let admobRequest = GADRequest()
+        
+        //リクエストのロード
+        bannerView.load(admobRequest)
     }
     
 
@@ -78,7 +94,8 @@ class ListViewController: UIViewController
         super.viewWillAppear(animated)
         reloadForCollectionView()
         initCheck()
-   }
+
+    }
     
     override func viewDidAppear(_ animated: Bool) {
     }
@@ -90,18 +107,8 @@ class ListViewController: UIViewController
     override func didReceiveMemoryWarning() {
         print(#function)
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using [segue destinationViewController].
-     // Pass the selected object to the new view controller.
-     }
-     */
+
     //=============================
     // MARK:Gesture
     //=============================
@@ -126,10 +133,9 @@ class ListViewController: UIViewController
         return true
         
     }
-    // 他のビューを触ったら、キーボードが閉じる
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
-        // moveDisplay = true
+
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
@@ -209,18 +215,21 @@ extension ListViewController:
             let id = forCell["bookid"] as! Int
             cell.id = id
             cell.title.text = forCell["title"] as! String
-            cell.title.backgroundColor = UIColor.flatSand
+            cell.title.backgroundColor = UIColor.white
 
             let myLocalImage:ingLocalImage = ingLocalImage()
-            let image = myLocalImage.readJpgImageInDocument(nameOfImage: "image\(id).jpg")
-            cell.image.image = image
+            if let image = myLocalImage.readJpgImageInDocument(nameOfImage: "image\(id).jpg") {
+                cell.imageView.image = image
+            } else {
+                cell.imageView.image = UIImage(named: "noImage")
+            }
             
             searchRequest = false
             searchTitle = ""
             
         } else {
-            cell.image.image = UIImage(named: "newbook")
-            cell.image.contentMode = .scaleAspectFill
+            cell.imageView.image = UIImage(named: "newbook")
+            cell.imageView.contentMode = .scaleAspectFill
             cell.title.text = ""
             cell.title.backgroundColor = UIColor.clear
         }
@@ -233,7 +242,6 @@ extension ListViewController:
     // MARK: UICollectionViewDelegate
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        print(#function)
         
         if indexPath.row < collections.count {
             let cell = collectionView.cellForItem(at: indexPath) as! customCell
@@ -262,7 +270,6 @@ extension ListViewController:
         
     }
     
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
     func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
         return false
     }
@@ -289,20 +296,15 @@ extension ListViewController:
     
     func reloadForCollectionView() {
         let myIngCoreData:MyCoreData = MyCoreData()
-        if (searchRequest == true) && (searchTitle != "")
-        {
+        if (searchRequest == true) && (searchTitle != "") {
             collections = myIngCoreData.searchRecommend(title: searchTitle)
-        }
-        else {
+        } else {
             collections = myIngCoreData.readRecommendAll()
         }
-        myCollectionView.reloadData()
         
+        myCollectionView.reloadData()
     }
-    
-    
-    
-    
+
     // 画面の端からの距離
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: margin, left: margin, bottom: margin, right: margin)
@@ -323,7 +325,6 @@ extension ListViewController:
 extension ListViewController {
     func initCheck() {
         if collections.count == 0 {
-//        if UserDefaults.standard.bool(forKey: "init") == false {
             performSegue(withIdentifier: "goToSubmit", sender: nil)
         }
         else {
@@ -331,6 +332,7 @@ extension ListViewController {
     }
 }
 
+// TODO: Button
 extension ListViewController {
     func initAddButton() {
         addSpringButton.layer.cornerRadius = addSpringButtonWidth.constant/2
@@ -348,8 +350,7 @@ extension ListViewController {
             $0?.layer.shadowRadius = 5
             $0?.layer.shadowOpacity = 0.5
 
-            
-            
+
         }
     }
     
@@ -379,4 +380,5 @@ extension ListViewController {
             }
     }
 }
+
 

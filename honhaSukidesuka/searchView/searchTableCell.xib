@@ -97,7 +97,7 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="authorLabel" destination="wMb-es-8xM" id="UUP-qE-22U"/>
-                <outlet property="bookImage" destination="RdI-bX-7ya" id="TD5-0x-dDa"/>
+                <outlet property="bookImageView" destination="RdI-bX-7ya" id="TD5-0x-dDa"/>
                 <outlet property="publishDateLabel" destination="VlU-wb-Ezv" id="txm-xi-bkZ"/>
                 <outlet property="publisherLabel" destination="GgK-cS-Trl" id="VZb-fG-JkB"/>
                 <outlet property="titleLabel" destination="SVO-l8-eg0" id="Ydy-Hg-ZOH"/>

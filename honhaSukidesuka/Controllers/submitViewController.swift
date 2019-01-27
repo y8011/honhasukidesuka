@@ -24,7 +24,7 @@ class submitViewController: UIViewController
     var previewLayer: AVCaptureVideoPreviewLayer?
     var captureDevice: AVCaptureDevice?
     
-    var moveDisplay:Bool = true
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var authorsTextField: UITextField!
     @IBOutlet weak var recomendTextView: UITextView!
@@ -63,6 +63,7 @@ class submitViewController: UIViewController
         
         
         initTextField()
+        addNotification()
         
     }
     override func viewWillLayoutSubviews() {
@@ -88,7 +89,6 @@ class submitViewController: UIViewController
         captureView.layer.cornerRadius = 5
         captureView.layer.masksToBounds = true
         self.captureSession.startRunning()
-        searchView.afterLoaded()
     }
     override func viewWillDisappear(_ animated: Bool) {
         
@@ -126,6 +126,11 @@ class submitViewController: UIViewController
             beforeText = text
         }
     }
+    @IBAction func touchDown(_ sender: UITextField) {
+        if sender.tag == 1 {
+            searchView.disappear()
+        }
+    }
     
 }
 
@@ -133,12 +138,7 @@ extension submitViewController {
     //==============================
     // MARK:Gesture
     //==============================
-    @IBAction func touchDown(_ sender: UITextField) {
-        if sender.tag == 1 {
-            searchView.disappear()
-        }
-    }
-    
+
     // 登録ボタンを押した時
     @IBAction func tapSubmitButton(_ sender: Any) {
         if titleTextField.text == "" {
@@ -226,12 +226,10 @@ extension submitViewController {
             guard let value = detectionString else { continue }
             
             guard let isbn = convertISBN(value: value) else {
-                //setResultLabel(text: "ISDNではなさそうです")
 
                 continue }
             
             text += "ISBN:\t\(isbn)"
-            //setResultLabel(text: text)
             
             bookAmazonURL = makeAmazonURL(isbn: isbn)
             let URLString = String(format: "https://www.googleapis.com/books/v1/volumes?q=isbn:%@",isbn)
@@ -294,7 +292,6 @@ extension submitViewController {
                 displayBookDetail()
             }
         }
-        
         self.captureSession.startRunning()
     }
     
@@ -335,7 +332,6 @@ extension submitViewController {
             self.bookImageView.image = UIImage(data: imageData)
         }
         bookUrlTextField.text = bookAmazonURL
-        //setResultLabel(text: "")
     }
     
     override func didReceiveMemoryWarning() {
@@ -346,80 +342,68 @@ extension submitViewController {
     // MARK:カメラ
     //===============================
     func showCamera() {
-        print(#function)
-        //カメラが使える場合　撮影モードの画面を表示
-        //クラス名.メソッド名　で使えるメソッド＝型メソッド
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             let picker = UIImagePickerController()
-            
-            //カメラモードに設定
             picker.sourceType = .camera
-            
-            //デリゲートの設定（撮影後のメソッドを感知するため）
             picker.delegate = self
-            
-            //撮影モード画面の表示（モーダル）
             present(picker, animated: true, completion: nil)
         }
     }
     
     func showAlbum(){
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
-            //インスタンスの作成
-            let cameraPicker = UIImagePickerController()
-            cameraPicker.sourceType = .photoLibrary
-            
-            cameraPicker.delegate = self
-            self.present(cameraPicker, animated: true, completion:  nil)
+            let picker = UIImagePickerController()
+            picker.sourceType = .photoLibrary
+            picker.delegate = self
+            self.present(picker, animated: true, completion:  nil)
             
         }
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-
-        
-        if Constants.DEBUG == true {
-            print(#function)
-        }
-        
-        //for camera
+       
+        let takenimage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        bookImageView.image = takenimage
         // UIImagePickerControllerReferenceURL はカメラロールを選択した時だけ存在するので切り分け。
-        if (info[UIImagePickerController.InfoKey.referenceURL] == nil) {
-            //imageViewに撮影した写真をセットするために変数に保存する
-            let takenimage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-            bookImageView.image = takenimage
-            
-            //自分のデバイス（プログラムが動いている場所）に写真を保存（カメラロール）
+        if (info[UIImagePickerController.InfoKey.referenceURL] == nil) {        //for camera
             UIImageWriteToSavedPhotosAlbum(takenimage, nil, nil, nil)
-            
-            //モーダルで表示した撮影モード画面を閉じる（前の画面に戻る）
-            dismiss(animated: true, completion: nil)
-            
+
         }
-        else {
-            //for photolibrary
-            let takenimage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-            bookImageView.image = takenimage
-            
-            //閉じる処理
-            picker.dismiss(animated: true, completion: nil)
+        else {  //for photolibrary
+
         }
-        //imageViewSetting()
-        
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+// MARK:- Search
+
+extension submitViewController  {
+    
+
+    override func didSearchBookAPI(result books: [Book]) {
+        super.didSearchBookAPI(result: books)
+        searchView.searchedBooks = books
+        searchView.searchedTableView.reloadData()
+        searchView.appear()
+    }
+
+    func makeAmazonURL(isbn: String) -> String {
+        return String(format: "http://amazon.co.jp/dp/%@", isbn)
     }
     
     
 }
 
-// MARK:- TableView
+// MARK: TableView
 extension submitViewController: UITableViewDelegate,UITableViewDataSource {
-
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as! searchTableCell
         
         let book = searchView.searchedBooks[indexPath.row]
+        cell.bookImageView.image = nil
         cell.titleLabel.text = book.volumeInfo?.title ?? ""
         cell.authorLabel.text = book.volumeInfo?.authors?.joined(separator: ",") ?? ""
         cell.publisherLabel.text = book.volumeInfo?.publisher ?? ""
@@ -427,10 +411,10 @@ extension submitViewController: UITableViewDelegate,UITableViewDataSource {
         if let imageLink = book.volumeInfo?.imageLinks?.thumbnail {
             guard let url = URL(string: imageLink) else { return cell }
             let filter = AspectScaledToFillSizeWithRoundedCornersFilter(
-                size: cell.bookImage.frame.size,
-                radius: 1
+                size: cell.bookImageView.frame.size,
+                radius: 2
             )
-            cell.bookImage.af_setImage(
+            cell.bookImageView.af_setImage(
                 withURL: url,
                 placeholderImage: UIImage(named: "noimage"),
                 filter: filter,
@@ -459,34 +443,25 @@ extension submitViewController: UITableViewDelegate,UITableViewDataSource {
             bookAmazonURL = ""
         }
         searchView.disappear()
-
-    }
-    
-}
-
-// MARK:-
-
-extension submitViewController  {
-    
-
-    
-    override func didSearchBookAPI(result books: [Book]) {
-        super.didSearchBookAPI(result: books)
-        print("done")
-        searchView.searchedBooks = books
         
-        searchView.searchedTableView.reloadData()
-        searchView.appear()
     }
-
-    func makeAmazonURL(isbn: String) -> String {
-        return String(format: "http://amazon.co.jp/dp/%@", isbn)
-    }
-    
     
 }
 
-
-
-
+extension submitViewController {
+    override func keyboardWillShowNotification(notification: NSNotification) {
+        // ここでキーボードの高さを取得、viewのbottomconstraintを変更しています。
+        let info = notification.userInfo!
+        
+        let keyboardFrame = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        
+        
+        scrollView.contentInset.bottom = keyboardFrame.size.height
+        
+    }
+    
+    override func keyboardWillHideNotification(notification: NSNotification) {
+        scrollView.contentInset.bottom = 0
+    }
+}
 

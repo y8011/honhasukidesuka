@@ -14,8 +14,8 @@ class SearchView: UIView {
     
     @IBOutlet weak var searchedTableView: UITableView!
     
-    
     public var searchedBooks: [Book] = []
+    public var searchedBookImages: [UIImage] = []
     
     // Storyboard/xib から初期化はここから
     
@@ -51,11 +51,7 @@ class SearchView: UIView {
         searchedTableView.register(UINib(nibName: "searchTableCell", bundle: nil), forCellReuseIdentifier: "searchCell")
 
     }
-    
-    
-    func afterLoaded() {
-        
-    }
+
     
     func appear() {
         if isHidden {

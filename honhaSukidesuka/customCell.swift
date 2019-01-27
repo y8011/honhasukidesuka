@@ -12,7 +12,7 @@ class customCell: UICollectionViewCell {
 
     @IBOutlet weak var title: UILabel!
     
-    @IBOutlet weak var image: UIImageView!
+    @IBOutlet weak var imageView: UIImageView!
     
     var id:Int = -1
     

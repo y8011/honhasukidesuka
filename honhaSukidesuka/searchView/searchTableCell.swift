@@ -10,7 +10,7 @@ import UIKit
 
 class searchTableCell: UITableViewCell {
 
-    @IBOutlet weak var bookImage: UIImageView!
+    @IBOutlet weak var bookImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var publishDateLabel: UILabel!

@@ -8,7 +8,7 @@
 
 import UIKit
 //import StatusAlert
-
+import GoogleMobileAds
 
 extension UIViewController: StatusAlertDelegate
 {
@@ -187,15 +187,11 @@ extension UIViewController {
                     let decoder = JSONDecoder()
                     let bookAPIResponse = try decoder.decode(BookAPIResponse.self, from: data)
                     books = bookAPIResponse.items
-                    if books.count == 0 {
-                        print("searchAPI:Google Bookでは見つかりませんでした")
-                        
-                    }
-                    else{
-                        //books.forEach{print($0.volumeInfo?.title ?? "なし")}
-                    }
+                   
                 } catch {
                     print ("json error: \(error)")
+                    print("searchAPI:Google Bookでは見つかりませんでした")
+                    books = []
                 }
                 searchGroup.leave()
             })
@@ -204,15 +200,85 @@ extension UIViewController {
         
         searchGroup.notify(queue: .main) {
             self.didSearchBookAPI(result: books)
+            
         }
     }
     
+    /** searchAPI()で検索APIの解析が完了した時にコールされる **/
     @objc func didSearchBookAPI(result books: [Book]) {
         
-        books.map{print($0.volumeInfo?.authors ?? "nasi")}
+//        let imageLinks = books.map{$0.volumeInfo?.imageLinks?.thumbnail ?? ""}
+//        var images: [UIImage?] = []
+
+       // imageLinks.forEach {  images.append(imageFromURL($0))}
+    }
+}
+
+
+extension UIViewController: GADBannerViewDelegate  // Admob
+
+
+{
+    //=================================
+    // MARK:Admob
+    //=================================
+    
+    public func adViewDidReceiveAd(_ bannerView: GADBannerView) {
+        // Add banner to view and add constraints as above.
+        addBannerViewToView(bannerView)
+        bannerView.alpha = 0
+        UIView.animate(withDuration: 1, animations: {
+            bannerView.alpha = 1
+        })
+    }
+    
+    func addBannerViewToView(_ bannerView: GADBannerView) {
+        bannerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(bannerView)
+        view.addConstraints(
+            [NSLayoutConstraint(item: bannerView,
+                                attribute: .bottom,
+                                relatedBy: .equal,
+                                toItem: bottomLayoutGuide,
+                                attribute: .top,
+                                multiplier: 1,
+                                constant: 0),
+             NSLayoutConstraint(item: bannerView,
+                                attribute: .centerX,
+                                relatedBy: .equal,
+                                toItem: view,
+                                attribute: .centerX,
+                                multiplier: 1,
+                                constant: 0)
+            ])
         
+    }
+}
+
+
+// Notification
+extension UIViewController {
+    func addNotification() {
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShowNotification(notification:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil)
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHideNotification(notification:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil)
+    }
+    
+    @objc func keyboardWillShowNotification(notification: NSNotification) {
         
     }
     
+    @objc func keyboardWillHideNotification(notification: NSNotification) {
 
+        
+    }
 }
